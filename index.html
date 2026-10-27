@@ -1,0 +1,766 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Бесплатный пошаговый учебник по сборке кубика Рубика 3×3 для начинающих.">
+  <title>CubeTutor — научись собирать кубик Рубика</title>
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #182033;
+      --muted: #697386;
+      --accent: #6655e8;
+      --accent-light: #eeebff;
+      --border: #e5e8f0;
+      --green: #15966b;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: auto;
+    }
+
+    header {
+      background: rgba(255,255,255,.95);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .nav {
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .logo span { color: var(--accent); }
+
+    .nav a:last-child {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .hero {
+      padding: 66px 0 48px;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: clamp(36px, 5vw, 58px);
+      line-height: 1.08;
+      letter-spacing: -2px;
+      margin: 18px 0;
+    }
+
+    h1 span { color: var(--accent); }
+
+    .hero p {
+      max-width: 540px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .button {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      border: 0;
+      border-radius: 12px;
+      padding: 13px 20px;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    .button:hover { background: #5140d2; }
+
+    .hero-art {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 26px;
+      text-align: center;
+      box-shadow: 0 12px 40px #20264b0b;
+    }
+
+    .hero-art p {
+      margin: 12px 0 0;
+      font-size: 14px;
+    }
+
+    .cube {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      width: 180px;
+      margin: 0 auto 16px;
+      padding: 7px;
+      background: #202433;
+      border-radius: 12px;
+      transform: rotate(-5deg);
+    }
+
+    .tile {
+      aspect-ratio: 1;
+      border-radius: 5px;
+      border: 2px solid #202433;
+    }
+
+    .white { background: #fff; }
+    .yellow { background: #ffda3d; }
+    .red { background: #ef4444; }
+    .orange { background: #ff922e; }
+    .blue { background: #3478f6; }
+    .green { background: #22bd76; }
+
+    section { padding: 32px 0; }
+
+    .section-heading { margin-bottom: 22px; }
+
+    h2 {
+      font-size: clamp(26px, 4vw, 36px);
+      letter-spacing: -1px;
+      margin: 0 0 8px;
+    }
+
+    .muted { color: var(--muted); }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .info-card, .lesson-card, .step-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+    }
+
+    .info-card h3, .lesson-card h3 { margin-top: 0; }
+
+    .info-icon {
+      font-size: 25px;
+      margin-bottom: 8px;
+    }
+
+    .lessons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .lesson-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .lesson-number {
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .lesson-card p {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .lesson-card button {
+      margin-top: auto;
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--accent);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    .lesson-card button:hover {
+      background: var(--accent-light);
+    }
+
+    .step-card { margin-top: 18px; }
+
+    .step-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .step-top h3 { margin: 0; font-size: 23px; }
+
+    .step-content {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 28px;
+      align-items: center;
+      margin: 22px 0;
+    }
+
+    .diagram {
+      width: 190px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      padding: 6px;
+      background: #252938;
+      border-radius: 9px;
+      margin: auto;
+    }
+
+    .diagram .tile {
+      border-radius: 3px;
+      border-width: 1px;
+    }
+
+    .diagram-caption {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    .step-instructions li { margin-bottom: 10px; }
+
+    .notation {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 12px 0;
+    }
+
+    .notation span {
+      background: #f0f1f6;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-weight: 800;
+    }
+
+    .step-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+    }
+
+    .secondary {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-weight: 700;
+    }
+
+    .secondary:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .progress {
+      height: 7px;
+      background: #eceef5;
+      border-radius: 9px;
+      overflow: hidden;
+      margin-top: 14px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 14.28%;
+      background: var(--accent);
+      transition: width .2s;
+    }
+
+    .tip {
+      background: #f0fbf6;
+      border: 1px solid #c8f0dd;
+      color: #176748;
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-top: 18px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      margin-top: 50px;
+      padding: 28px 0;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .hero { grid-template-columns: 1fr; padding-top: 40px; }
+      .hero-art { max-width: 390px; width: 100%; margin: auto; }
+      .info-grid { grid-template-columns: 1fr; }
+      .lessons { grid-template-columns: 1fr; }
+      .step-content { grid-template-columns: 1fr; }
+      .step-instructions { padding-left: 20px; }
+      .nav { min-height: 60px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <a class="logo" href="#">Cube<span>Tutor</span></a>
+      <a href="#lessons">Все уроки ↓</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="hero">
+        <div>
+          <span class="tag">БЕСПЛАТНЫЙ УЧЕБНИК · 3×3</span>
+          <h1>Собери кубик Рубика <span>с нуля.</span></h1>
+          <p>
+            Не умеешь собирать кубик? Не проблема.
+            Разберём всё по шагам: от первых белых деталей
+            до полностью собранного кубика.
+          </p>
+          <a class="button" href="#lessons">Начать обучение →</a>
+        </div>
+
+        <div class="hero-art">
+          <div class="cube" aria-label="Схематичное изображение кубика Рубика">
+            <div class="tile green"></div>
+            <div class="tile white"></div>
+            <div class="tile red"></div>
+            <div class="tile yellow"></div>
+            <div class="tile blue"></div>
+            <div class="tile orange"></div>
+            <div class="tile red"></div>
+            <div class="tile green"></div>
+            <div class="tile white"></div>
+          </div>
+          <strong>7 понятных этапов</strong>
+          <p>Учись в своём темпе и возвращайся к любому уроку.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-heading">
+          <h2>Сначала разберёмся</h2>
+          <p class="muted">Три вещи, которые нужно знать перед сборкой.</p>
+        </div>
+
+        <div class="info-grid">
+          <article class="info-card">
+            <div class="info-icon">🎯</div>
+            <h3>Центры</h3>
+            <p class="muted">Детали в центре каждой стороны. Они задают цвет этой стороны и относительно друг друга не меняются местами.</p>
+          </article>
+          <article class="info-card">
+            <div class="info-icon">↔️</div>
+            <h3>Рёбра</h3>
+            <p class="muted">Детали с двумя цветами. На кубике 12 рёбер. Например, бело-красное ребро должно находиться между белой и красной сторонами.</p>
+          </article>
+          <article class="info-card">
+            <div class="info-icon">◩</div>
+            <h3>Углы</h3>
+            <p class="muted">Детали с тремя цветами. На кубике 8 углов. Каждый угол должен оказаться между сторонами со своими тремя цветами.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="lessons">
+        <div class="section-heading">
+          <h2>Уроки сборки</h2>
+          <p class="muted">Выбирай урок и проходи шаги по порядку.</p>
+        </div>
+
+        <div class="lessons" id="lessonList"></div>
+      </section>
+
+      <section id="study">
+        <div class="section-heading">
+          <h2>Изучаем шаг</h2>
+          <p class="muted">Читайте инструкцию и сверяйтесь со схемой.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-top">
+            <div>
+              <span class="lesson-number" id="lessonLabel">УРОК 1</span>
+              <h3 id="stepTitle">Знакомство с кубиком</h3>
+            </div>
+            <span class="muted" id="stepCount">Шаг 1 из 7</span>
+          </div>
+
+          <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+
+          <div class="step-content">
+            <div>
+              <div class="diagram" id="diagram" aria-label="Цветная схема стороны кубика"></div>
+              <div class="diagram-caption" id="diagramCaption">Пример цветной стороны</div>
+            </div>
+            <div>
+              <p id="stepIntro"></p>
+              <ol class="step-instructions" id="stepInstructions"></ol>
+              <div class="notation" id="notation"></div>
+              <div class="tip" id="stepTip"></div>
+            </div>
+          </div>
+
+          <div class="step-buttons">
+            <button class="secondary" id="prevButton" type="button">← Назад</button>
+            <button class="button" id="nextButton" type="button">Следующий шаг →</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      CubeTutor · Бесплатное обучение сборке кубика Рубика 3×3
+    </div>
+  </footer>
+
+  <script>
+    const lessons = [
+      {
+        title: "Знакомство с кубиком",
+        description: "Узнаём детали и учимся читать обозначения ходов.",
+        steps: [
+          {
+            title: "Познакомься с деталями",
+            intro: "У кубика есть шесть сторон: белая, жёлтая, красная, оранжевая, синяя и зелёная. Начнём с белой стороны.",
+            colors: ["white","white","white","white","white","white","white","white","white"],
+            caption: "Пример полностью белой стороны",
+            instructions: [
+              "Найди центральную белую деталь.",
+              "Найди рёбра с двумя цветами и углы с тремя цветами.",
+              "Помни: цвет центра показывает цвет соответствующей стороны."
+            ],
+            moves: [],
+            tip: "Для обучения удобнее держать белую сторону сверху, а жёлтую снизу."
+          },
+          {
+            title: "Научись читать обозначения",
+            intro: "В инструкциях повороты часто обозначают английскими буквами. Буква указывает, какую грань нужно повернуть.",
+            colors: ["green","white","red","yellow","blue","orange","red","green","white"],
+            caption: "Цвета сторон на схеме условные",
+            instructions: [
+              "R — правая грань.",
+              "L — левая грань. U — верхняя грань.",
+              "D — нижняя грань. F — передняя грань. B — задняя грань.",
+              "Знак ' после буквы означает поворот в обратную сторону. Например, R'."
+            ],
+            moves: ["R","L","U","D","F","B","R′"],
+            tip: "Направление поворота определяют, глядя прямо на ту грань, которую поворачиваешь."
+          }
+        ]
+      },
+      {
+        title: "Белый крест",
+        description: "Собираем четыре белых ребра вокруг белого центра.",
+        steps: [
+          {
+            title: "Собери белый крест",
+            intro: "Нужно расположить четыре белых ребра вокруг белого центра. Важно, чтобы второй цвет каждого ребра совпадал с цветом бокового центра.",
+            colors: ["blue","white","red","white","white","white","orange","white","green"],
+            caption: "Условная схема белого креста",
+            instructions: [
+              "Найди ребро, на котором есть белый цвет.",
+              "Подведи его к белому центру, не потеряв нужную ориентацию.",
+              "Совмести второй цвет ребра с центром такого же цвета.",
+              "Повтори для остальных трёх белых рёбер."
+            ],
+            moves: [],
+            tip: "Не достаточно сделать белый плюс: боковые цвета рёбер тоже должны совпадать с центрами."
+          }
+        ]
+      },
+      {
+        title: "Белые углы",
+        description: "Завершаем белую сторону и первый слой.",
+        steps: [
+          {
+            title: "Поставь белые углы",
+            intro: "Теперь между белыми рёбрами нужно поставить четыре угла с белым цветом.",
+            colors: ["white","white","white","white","white","white","white","white","white"],
+            caption: "Цель — полностью белая сторона",
+            instructions: [
+              "Найди угол с белым цветом.",
+              "Определи его два других цвета и найди место между соответствующими центрами.",
+              "Поставь угол над нужным местом.",
+              "Используй алгоритм из проверенного руководства для вставки угла, не разрушая уже собранную часть."
+            ],
+            moves: ["R","U","R′"],
+            tip: "Схема показывает цель этапа, а не точное положение каждой детали до выполнения ходов."
+          }
+        ]
+      },
+      {
+        title: "Средний слой",
+        description: "Ставим на места четыре ребра без жёлтого цвета.",
+        steps: [
+          {
+            title: "Собери средний слой",
+            intro: "Когда первый слой собран, найди верхнее ребро без жёлтого цвета и определи, куда оно должно попасть.",
+            colors: ["blue","red","green","orange","blue","red","green","orange","blue"],
+            caption: "Пример цветов боковых сторон",
+            instructions: [
+              "Совмести передний цвет ребра с передним центром.",
+              "Определи, должно ли ребро уйти вправо или влево.",
+              "Примени соответствующий алгоритм вставки.",
+              "Повтори для четырёх рёбер среднего слоя."
+            ],
+            moves: ["U","R","U′","R′"],
+            tip: "Если в верхнем слое нет подходящего ребра, может понадобиться сначала вынуть неверно поставленное ребро из среднего слоя."
+          }
+        ]
+      },
+      {
+        title: "Жёлтый крест",
+        description: "Получаем жёлтый плюс на верхней стороне.",
+        steps: [
+          {
+            title: "Сделай жёлтый крест",
+            intro: "На верхней жёлтой стороне могут быть разные рисунки: точка, уголок, линия или уже крест.",
+            colors: ["blue","yellow","red","yellow","yellow","yellow","orange","yellow","green"],
+            caption: "Цель — жёлтый крест",
+            instructions: [
+              "Поверни кубик жёлтой стороной вверх.",
+              "Посмотри, какой рисунок образуют жёлтые рёбра.",
+              "Примени алгоритм для своего случая, правильно ориентируя рисунок.",
+              "Повторяй, пока не получится жёлтый крест."
+            ],
+            moves: ["F","R","U","R′","U′","F′"],
+            tip: "Этот алгоритм меняет расположение жёлтых рёбер. Иногда его нужно выполнить несколько раз."
+          }
+        ]
+      },
+      {
+        title: "Жёлтая сторона",
+        description: "Разворачиваем все жёлтые углы жёлтым цветом вверх.",
+        steps: [
+          {
+            title: "Заверши жёлтую сторону",
+            intro: "Жёлтый крест готов. Теперь нужно повернуть углы так, чтобы вся верхняя сторона стала жёлтой.",
+            colors: ["yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow"],
+            caption: "Цель — вся жёлтая сторона",
+            instructions: [
+              "Сохраняй жёлтую сторону сверху.",
+              "Определи положение жёлтых углов.",
+              "Выбери алгоритм для текущего случая и выполняй его без случайных поворотов всего кубика.",
+              "Проверь, что вся верхняя сторона стала жёлтой."
+            ],
+            moves: [],
+            tip: "На этом этапе боковые цвета углов ещё могут стоять не на своих местах."
+          }
+        ]
+      },
+      {
+        title: "Последние детали",
+        description: "Расставляем углы и рёбра, чтобы закончить сборку.",
+        steps: [
+          {
+            title: "Собери последние детали",
+            intro: "Жёлтая сторона собрана. Осталось поставить верхние углы и рёбра на правильные места.",
+            colors: ["red","red","red","blue","yellow","green","orange","orange","orange"],
+            caption: "Проверь совпадение боковых цветов",
+            instructions: [
+              "Проверь, совпадают ли боковые цвета верхних углов с центрами.",
+              "Переставь углы алгоритмом для их текущего случая.",
+              "Затем проверь верхние рёбра и переставь их на свои места.",
+              "Если все стороны одного цвета, кубик собран!"
+            ],
+            moves: [],
+            tip: "Важно: этот учебник пока даёт общий план этапов. Для точной сборки нужны отдельные схемы каждого случая и проверенные алгоритмы."
+          }
+        ]
+      }
+    ];
+
+    let currentLesson = 0;
+    let currentStep = 0;
+
+    const lessonList = document.getElementById("lessonList");
+    const lessonLabel = document.getElementById("lessonLabel");
+    const stepTitle = document.getElementById("stepTitle");
+    const stepCount = document.getElementById("stepCount");
+    const stepIntro = document.getElementById("stepIntro");
+    const stepInstructions = document.getElementById("stepInstructions");
+    const diagram = document.getElementById("diagram");
+    const diagramCaption = document.getElementById("diagramCaption");
+    const notation = document.getElementById("notation");
+    const stepTip = document.getElementById("stepTip");
+    const progressBar = document.getElementById("progressBar");
+    const prevButton = document.getElementById("prevButton");
+    const nextButton = document.getElementById("nextButton");
+
+    function renderLessons() {
+      lessonList.innerHTML = "";
+      lessons.forEach((lesson, index) => {
+        const card = document.createElement("article");
+        card.className = "lesson-card";
+
+        const number = document.createElement("span");
+        number.className = "lesson-number";
+        number.textContent = "УРОК " + (index + 1);
+
+        const heading = document.createElement("h3");
+        heading.textContent = lesson.title;
+
+        const description = document.createElement("p");
+        description.textContent = lesson.description;
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = "Открыть урок →";
+        button.addEventListener("click", () => {
+          currentLesson = index;
+          currentStep = 0;
+          renderStep();
+          document.getElementById("study").scrollIntoView({ behavior: "smooth" });
+        });
+
+        card.append(number, heading, description, button);
+        lessonList.appendChild(card);
+      });
+    }
+
+    function renderStep() {
+      const lesson = lessons[currentLesson];
+      const step = lesson.steps[currentStep];
+
+      lessonLabel.textContent = "УРОК " + (currentLesson + 1);
+      stepTitle.textContent = step.title;
+      stepCount.textContent =
+        "Шаг " + (currentStep + 1) + " из " + lesson.steps.length;
+
+      stepIntro.textContent = step.intro;
+      diagramCaption.textContent = step.caption;
+      stepTip.textContent = "Совет: " + step.tip;
+
+      diagram.innerHTML = "";
+      step.colors.forEach(color => {
+        const tile = document.createElement("div");
+        tile.className = "tile " + color;
+        diagram.appendChild(tile);
+      });
+
+      stepInstructions.innerHTML = "";
+      step.instructions.forEach(instruction => {
+        const li = document.createElement("li");
+        li.textContent = instruction;
+        stepInstructions.appendChild(li);
+      });
+
+      notation.innerHTML = "";
+      step.moves.forEach(move => {
+        const span = document.createElement("span");
+        span.textContent = move;
+        notation.appendChild(span);
+      });
+
+      if (step.moves.length === 0) {
+        const span = document.createElement("span");
+        span.textContent = "Пока без алгоритма";
+        notation.appendChild(span);
+      }
+
+      const overallProgress =
+        ((currentLesson + currentStep / lesson.steps.length) / lessons.length) * 100;
+      progressBar.style.width = Math.max(5, overallProgress) + "%";
+
+      prevButton.disabled = currentLesson === 0 && currentStep === 0;
+      nextButton.textContent =
+        currentLesson === lessons.length - 1 &&
+        currentStep === lesson.steps.length - 1
+          ? "Уроки пройдены ✓"
+          : "Следующий шаг →";
+    }
+
+    prevButton.addEventListener("click", () => {
+      if (currentStep > 0) {
+        currentStep--;
+      } else if (currentLesson > 0) {
+        currentLesson--;
+        currentStep = lessons[currentLesson].steps.length - 1;
+      }
+      renderStep();
+    });
+
+    nextButton.addEventListener("click", () => {
+      const lesson = lessons[currentLesson];
+
+      if (currentStep < lesson.steps.length - 1) {
+        currentStep++;
+      } else if (currentLesson < lessons.length - 1) {
+        currentLesson++;
+        currentStep = 0;
+      } else {
+        document.getElementById("lessons").scrollIntoView({ behavior: "smooth" });
+        return;
+      }
+
+      renderStep();
+    });
+
+    renderLessons();
+    renderStep();
+  </script>
+</body>
+</html>
